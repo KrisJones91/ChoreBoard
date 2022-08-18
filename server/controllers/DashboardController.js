@@ -8,6 +8,7 @@ export class DashboardController extends BaseController{
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .get('/', this.getAllDashboards)
+      .get('/:id', this.getOne)
       .post('/', this.createDashboard)
   }
 
@@ -16,6 +17,14 @@ export class DashboardController extends BaseController{
       req.body.authorId = req.userInfo.id
       const dashboards = await dashboardService.getAll(req.body.authorId)
       res.send(dashboards)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getOne(req, res, next) {
+    try {
+      res.send(await dashboardService.getOne(req.params.id))
     } catch (e) {
       next(e)
     }

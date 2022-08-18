@@ -6,6 +6,14 @@ class DashboardService{
     return await dbContext.Dashboard.find({authorId: id}).populate('author','id')
   }
 
+  async getOne(id) {
+    const Dashboard = await dbContext.Dashboard.findById(id)
+    if (!Dashboard) {
+      throw new BadRequest('Invalid ID')
+    }
+    return Dashboard
+  }
+
   async createDashboard(body) {
     return await dbContext.Dashboard.create(body)
   }
