@@ -25,5 +25,13 @@ class DashboardService{
     }
     return newDashboard
   }
+
+  async deleteDashboard(id) {
+    const Dash = await dbContext.Dashboard.findByIdAndDelete(id)
+    if (!Dash) {
+      throw new BadRequest("Dashboard with that ID does not exist")
+    }
+    return 'Deleted Successfully'
+  }
 }
 export const dashboardService = new DashboardService()

@@ -1,6 +1,8 @@
 import BaseController from "../utils/BaseController";
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import { dashboardService } from "../services/DashboardService";
+import { dbContext } from "../db/DbContext";
+import { BadRequest } from "../utils/Errors";
 
 export class DashboardController extends BaseController{
   constructor() {
@@ -11,6 +13,7 @@ export class DashboardController extends BaseController{
       .get('/:id', this.getOne)
       .post('/', this.createDashboard)
       .put('/:id', this.editDash)
+      .delete('/:id', this.deleteDash)
   }
 
   async getAllDashboards(req, res, next) {
@@ -45,6 +48,14 @@ export class DashboardController extends BaseController{
       req.body.authorId = req.userInfo.id
       req.body.id = req.params.id
       res.send(await dashboardService.editDash(req.params.id, req.body))
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async deleteDash(req, res, next) {
+    try {
+      res.send(await dashboardService.deleteDashboard(req.params.id))
     } catch (e) {
       next(e)
     }
