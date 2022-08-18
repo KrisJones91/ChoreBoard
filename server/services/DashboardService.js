@@ -18,5 +18,12 @@ class DashboardService{
     return await dbContext.Dashboard.create(body)
   }
 
+  async editDash(id, body) {
+    const newDashboard = await dbContext.Dashboard.findOneAndUpdate(id, body, { new: true })
+    if (!newDashboard) {
+      throw new BadRequest('Dashboard does not exist')
+    }
+    return newDashboard
+  }
 }
 export const dashboardService = new DashboardService()

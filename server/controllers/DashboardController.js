@@ -10,6 +10,7 @@ export class DashboardController extends BaseController{
       .get('/', this.getAllDashboards)
       .get('/:id', this.getOne)
       .post('/', this.createDashboard)
+      .put('/:id', this.editDash)
   }
 
   async getAllDashboards(req, res, next) {
@@ -34,6 +35,16 @@ export class DashboardController extends BaseController{
     try {
       req.body.authorId = req.userInfo.id
       res.send(await dashboardService.createDashboard(req.body))
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async editDash(req, res, next) {
+    try {
+      req.body.authorId = req.userInfo.id
+      req.body.id = req.params.id
+      res.send(await dashboardService.editDash(req.params.id, req.body))
     } catch (e) {
       next(e)
     }
