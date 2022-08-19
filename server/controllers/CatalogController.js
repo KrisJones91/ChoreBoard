@@ -1,6 +1,7 @@
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController";
 import { catalogService } from "../services/CatalogService"
+import { BadRequest } from "../utils/Errors";
 
 export class CatalogController extends BaseController{
   constructor() {
@@ -9,16 +10,9 @@ export class CatalogController extends BaseController{
       .use(Auth0Provider.getAuthorizedUserInfo)
       // .get('/', this.getAll)
       .post('/', this.createCatalog)
-  }
+      .delete('/:id', this.deleteCatalog)
 
-  // async getAll(req, res, next) {
-  //   try {
-  //     const catalog = await catalogService.getAll(req.params.dashId)
-  //     res.send(catalog)
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
+  }
 
   async createCatalog(req, res, next) {
     try {
@@ -28,4 +22,26 @@ export class CatalogController extends BaseController{
       next(e)
     }
   }
+
+  async deleteCatalog(req, res, next) {
+    try {
+      // if (req.userInfo.id === req.params) {
+        res.send(await catalogService.deleteCatalog(req.params.id))
+      // } else {
+      //   throw new BadRequest('Only the Author can delete a Catalog')
+      // }
+    } catch (e) {
+      next(e)
+    }
+  }
+
+    // async getAll(req, res, next) {
+  //   try {
+  //     const catalog = await catalogService.getAll(req.params.dashId)
+  //     res.send(catalog)
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
+
 }
