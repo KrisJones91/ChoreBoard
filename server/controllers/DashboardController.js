@@ -3,6 +3,7 @@ import { Auth0Provider } from "@bcwdev/auth0provider";
 import { dashboardService } from "../services/DashboardService";
 import { dbContext } from "../db/DbContext";
 import { BadRequest } from "../utils/Errors";
+import { catalogService } from "../services/CatalogService";
 
 export class DashboardController extends BaseController{
   constructor() {
@@ -14,6 +15,16 @@ export class DashboardController extends BaseController{
       .post('/', this.createDashboard)
       .put('/:id', this.editDash)
       .delete('/:id', this.deleteDash)
+      //GetCatalog within each Dashboard
+      .get('/:id/catalog', this.getCatalogs)
+  }
+
+  async getCatalogs(req, res, next) {
+    try {
+      return res.send(await catalogService.getAllCatalogsByDashboard({ dashId: req.params.id }))
+    } catch (e) {
+      next(e)
+    }
   }
 
   async getAllDashboards(req, res, next) {
@@ -60,4 +71,5 @@ export class DashboardController extends BaseController{
       next(e)
     }
   }
+
 }
